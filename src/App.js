@@ -18,6 +18,11 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Avatar from '@mui/material/Avatar';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 const drawerWidth = 240;
 
@@ -66,6 +71,34 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
+// サンプルメールデータ
+const sampleEmails = [
+  {
+    id: 1,
+    sender: '山田太郎',
+    subject: 'プロジェクトの進捗について',
+    preview: '先日のミーティングで話し合った内容について、以下の点を確認させていただきたいと思います...',
+    time: '10:30',
+    starred: true,
+  },
+  {
+    id: 2,
+    sender: '鈴木花子',
+    subject: '週次レポート',
+    preview: '今週の週次レポートを添付いたしました。主なポイントは以下の通りです...',
+    time: '09:15',
+    starred: false,
+  },
+  {
+    id: 3,
+    sender: '佐藤一郎',
+    subject: '新機能のリリースについて',
+    preview: '来週のリリースに向けて、以下の作業を進めています...',
+    time: '昨日',
+    starred: true,
+  },
+];
+
 function PersistentDrawerLeft() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -93,7 +126,7 @@ function PersistentDrawerLeft() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            ヘッダー
+            メール
           </Typography>
         </Toolbar>
       </AppBar>
@@ -144,12 +177,46 @@ function PersistentDrawerLeft() {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        <Typography paragraph>
-          メインコンテンツ
-        </Typography>
-        <Typography paragraph>
-          ここにグラフやテーブルなどのコンポーネントを配置します。
-        </Typography>
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={2}>
+            {sampleEmails.map((email) => (
+              <Grid item xs={12} key={email.id}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      backgroundColor: 'action.hover',
+                    },
+                  }}
+                >
+                  <Avatar sx={{ mr: 2 }}>{email.sender[0]}</Avatar>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                      <Typography variant="subtitle1" component="div" sx={{ mr: 1 }}>
+                        {email.sender}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {email.time}
+                      </Typography>
+                    </Box>
+                    <Typography variant="subtitle2" component="div" sx={{ mb: 0.5 }}>
+                      {email.subject}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {email.preview}
+                    </Typography>
+                  </Box>
+                  <IconButton size="small">
+                    {email.starred ? <StarIcon color="primary" /> : <StarBorderIcon />}
+                  </IconButton>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </Main>
     </Box>
   );
